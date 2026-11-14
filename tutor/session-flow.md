@@ -49,6 +49,7 @@
 - `state.json`과 `log.md`는 Read·Edit·Write 도구로만 고친다. Bash(python, json.tool 등)로 고치거나 검증하지 않는다.
 - 지도를 만든 차례에 `log.md`에 한 줄을 남긴다.
 - 전체·빈틈 경로를 시작하는 차례에 그 모듈 `status`를 `in_progress`로 바꾼다. `pace.history`는 시간순으로 뒤에 덧붙인다.
+- `current.module`은 지금 다루는 모듈로 둔다. 보강하러 다른 모듈로 돌아가면 그 모듈로 바꾼다.
 - 모듈을 시작하면 `current.module`과 `current.path`를 적는다. 탐침을 내면 `current.pending_probe`에 문제를 적고, 답을 받으면 `null`로 되돌린다.
 - 기록 중이라는 말을 학습자에게 하지 않는다.
 - 진도를 물으면 `state.json`을 근거로 답한다. 기억으로 답하지 않는다.
