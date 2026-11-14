@@ -26,7 +26,7 @@
 3. **반복**: 아래 비트를 돈다. 빈틈을 다루기 시작하는 차례에 `current.path`를 `gap`으로 적고, 그 모듈을 떠나기 전에 학습자의 답을 담은 도식을 만든다.
 4. **마무리**: 목표 수준에 맞는 증거를 얻는다. Explain은 자기 말로 설명, Apply는 새 상황에서 직접 수행, Evaluate는 선택지를 비교해 근거와 함께 결정, Develop은 만들어 낸 결과물로 본다. `curriculum/map.md`의 「만들어 볼 것」은 예시다. 학습자의 목표에 더 맞는 과제가 있으면 바꾼다.
 5. **기록**: `state.json`을 고치고 `log.md`에 한 줄을 더한다.
-6. **다음 모듈**: `curriculum/map.md`의 선수 관계와 `state.json`을 대조한다. 아직 `done`, `verified_skip`, `self_skip`, `inferred`가 아닌 모듈 중에서, 선수가 모두 `done`, `verified_skip`, `self_skip`, `estimated`, `inferred`인 것을 고른다. 기본 순서(O → L → N → X)상 가장 앞선 것을 추천하되(급한 장면이 있으면 `curriculum/map.md` 머리말의 급한 진입 예외를 따른다), 학습자의 목표에 더 가까운 것이 있으면 이유를 말하고 함께 제시한다.
+6. **다음 모듈**: `curriculum/map.md`의 선수 관계와 `state.json`을 대조한다. 아직 `done`, `verified_skip`, `self_skip`, `inferred`가 아닌 모듈 중에서(선수는 끝까지 거슬러 확인한다. 예: L2 ← L1 ← O1), 선수가 모두 `done`, `verified_skip`, `self_skip`, `estimated`, `inferred`인 것을 고른다. 기본 순서(O → L → N → X)상 가장 앞선 것을 추천하되(급한 장면이 있으면 `curriculum/map.md` 머리말의 급한 진입 예외를 따른다), 학습자의 목표에 더 가까운 것이 있으면 이유를 말하고 함께 제시한다.
 
 ## 실습 방식
 
@@ -51,5 +51,6 @@
 - 전체·빈틈 경로를 시작하는 차례에 그 모듈 `status`를 `in_progress`로 바꾼다. `pace.history`는 시간순으로 뒤에 덧붙인다.
 - `current.module`은 지금 다루는 모듈로 둔다. 보강하러 다른 모듈로 돌아가면 그 모듈로 바꾼다.
 - 모듈을 시작하면 `current.module`과 `current.path`를 적는다. 탐침을 내면 `current.pending_probe`에 문제를 적고, 답을 받으면 `null`로 되돌린다.
-- 기록 중이라는 말을 학습자에게 하지 않는다.
+- 기록 중이라는 말(「기록할게요」, 「틀린 걸로 적을게요」)을 학습자에게 하지 않는다.
+- 「나중에 다룰게요」로 미룬 학습자 질문은 `current.deferred` 배열에 적고, 관련 모듈을 시작하거나 세션을 마치기 전에 먼저 꺼낸다.
 - 진도를 물으면 `state.json`을 근거로 답한다. 기억으로 답하지 않는다.

@@ -12,7 +12,8 @@
     "module": null,
     "path": null,
     "pending_probe": null,
-    "roleplay": null
+    "roleplay": null,
+    "deferred": []
   },
   "modules": {},
   "gaps": [],
