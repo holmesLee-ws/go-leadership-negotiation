@@ -55,7 +55,7 @@ function parseCurriculum(text) {
 // 근거 칸의 항목은 「;」로 나뉘고, 각 항목에서 「 — 」 앞이 근거 키다.
 // 「직접 규율하는 법령 없음」으로 시작하는 항목은 키가 아니다.
 function citeKeys(value) {
-  return value.split(";").map((s) => s.split(" — ")[0].trim()).filter((k) => k && !k.startsWith("직접 규율하는 법령 없음"));
+  return value.split(";").map((s) => s.split(" — ")[0].trim()).filter((k) => k && !k.startsWith("직접 규율하는 법령 없음") && !k.startsWith("해당 없음"));
 }
 
 // sources.md 행: | `키` | 요지 | 원문 발췌 | URL | 조회일 | 출처 종류 | 개정 잦음 |
@@ -97,6 +97,9 @@ function main() {
   const known = existsSync(join(root, "curriculum/sources.md")) ? sourceKeys(read("curriculum/sources.md"), errors) : new Set();
   if (known.size === 0) errors.push("curriculum/sources.md 근거 표 없음");
   for (const [id, field, key] of cites) if (!known.has(key)) errors.push(`${id} ${field}: sources.md에 없는 근거 「${key}」`);
+  const used = new Set(cites.map(([, , k]) => k));
+  const tutorText = readdirSync(join(root, "tutor")).map((f) => read(`tutor/${f}`)).join("\n");
+  for (const k of known) if (!used.has(k) && !tutorText.includes(`\`${k}\``)) errors.push(`sources.md 「${k}」: map·tutor 어디에서도 쓰지 않는 근거(고아 키)`);
   if (modules.size === 0) errors.push("모듈을 찾지 못함");
 
   const files = execFileSync("git", ["ls-files", "--cached", "--others", "--exclude-standard", "-z"], { cwd: root, encoding: "utf8" }).split("\0").filter(Boolean);
