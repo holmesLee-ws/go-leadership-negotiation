@@ -37,6 +37,10 @@ function parseCurriculum(text) {
     const prereq = !fields["선수"] || fields["선수"] === "없음" ? [] : fields["선수"].split(",").map((s) => s.trim());
     if (fields["조건부 선수"]) for (const m of fields["조건부 선수"].matchAll(/([OLNX]\d+)\(/g)) prereq.push(m[1]);
     modules.set(id, prereq);
+    if (fields["국내 근거"]) for (const item of fields["국내 근거"].split(";").map((s) => s.trim())) {
+      if (item.startsWith("해당 없음")) problems.push(`${id}: 국내 근거에 「해당 없음」 금지 — 「직접 규율하는 법령 없음 — 맥락」으로 쓴다`);
+      if (item.startsWith("직접 규율하는 법령 없음") && !/ — .{10,}/.test(item)) problems.push(`${id}: 「직접 규율하는 법령 없음」 뒤에 국내 맥락이 없음`);
+    }
     for (const name of CITED) if (fields[name]) cites.push(...citeKeys(fields[name]).map((k) => [id, name, k]));
   }
   for (const [id, prereq] of modules) for (const p of prereq) if (!modules.has(p)) problems.push(`${id}: 없는 선수 ${p}`);
@@ -62,8 +66,9 @@ function citeKeys(value) {
 function sourceKeys(text, problems) {
   const keys = new Set();
   for (const line of text.split("\n")) {
+    if (!line.startsWith("| ") || /^\| (근거 키|---)/.test(line)) continue;
     const m = line.match(/^\| `([^`]+)` \|/);
-    if (!m) continue;
+    if (!m) { problems.push(`sources.md: 키 형식이 아닌 표 행 「${line.slice(0, 40)}」`); continue; }
     const key = m[1];
     if (keys.has(key)) problems.push(`sources.md: 중복 키 「${key}」`);
     keys.add(key);
@@ -71,7 +76,7 @@ function sourceKeys(text, problems) {
     if (cells.length !== 7) { problems.push(`sources.md 「${key}」: 칸 수 ${cells.length}(7이어야 함)`); continue; }
     const [, gist, excerpt, url, date, kind] = cells;
     if (!gist) problems.push(`sources.md 「${key}」: 요지 없음`);
-    if (!excerpt) problems.push(`sources.md 「${key}」: 원문 발췌 없음`);
+    if (!excerpt || excerpt.replace(/[-—\s]/g, "").length < 8) problems.push(`sources.md 「${key}」: 원문 발췌 없음`);
     if (!/https?:\/\//.test(url)) problems.push(`sources.md 「${key}」: URL 없음`);
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) problems.push(`sources.md 「${key}」: 조회일 형식 오류`);
     if (!kind) problems.push(`sources.md 「${key}」: 출처 종류 없음`);
@@ -87,7 +92,12 @@ function findVisualAssets(files) {
 
 function findTemplateMarkup(name, text) {
   const hits = [];
-  for (const m of text.matchAll(/(```|~~~)[\s\S]*?\1/g)) if (/<(!doctype|html|svg|style|canvas|script)\b/i.test(m[0])) hits.push(name);
+  for (const m of text.matchAll(/(```|~~~)([^\n]*)\n[\s\S]*?\1/g)) {
+    if (/^(json|bash|sh|zsh|powershell)$/.test(m[2].trim())) continue;
+    if (/<[a-z!][\w-]*[\s>/]/i.test(m[0])) hits.push(name);
+  }
+  const outside = text.replace(/(```|~~~)[\s\S]*?\1/g, "").replace(/`[^`\n]*`/g, "");
+  if (/<(!doctype|html|svg|style|canvas|script)\b/i.test(outside)) hits.push(name);
   return hits;
 }
 
@@ -111,7 +121,9 @@ function main() {
   }
   if (!existsSync(join(root, "learner-template/log.md"))) errors.push("learner-template/log.md 없음");
   for (const s of readdirSync(join(root, ".claude/skills"))) {
-    if (statSync(join(root, ".claude/skills", s)).isDirectory() && !existsSync(join(root, ".claude/skills", s, "SKILL.md"))) errors.push(`스킬 ${s}: SKILL.md 없음`);
+    if (!statSync(join(root, ".claude/skills", s)).isDirectory()) continue;
+    if (!existsSync(join(root, ".claude/skills", s, "SKILL.md"))) { errors.push(`스킬 ${s}: SKILL.md 없음`); continue; }
+    if (!new RegExp(`^---\nname: ${s}\ndescription: .+\n`).test(read(`.claude/skills/${s}/SKILL.md`))) errors.push(`스킬 ${s}: frontmatter(name·description) 형식 오류`);
   }
   if (!read(".gitignore").split("\n").includes("learner/")) errors.push(".gitignore에 learner/ 없음");
 

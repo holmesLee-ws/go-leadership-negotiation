@@ -65,6 +65,7 @@
 
 | 근거 키 | 요지 | 원문 발췌 | URL | 조회일 | 출처 종류 | 개정 잦음 |
 |---|---|---|---|---|---|---|
+| `CS2023 숙련 수준` | go-* 시리즈 공통 수준 체계의 출처. ACM·IEEE-CS·AAAI 컴퓨터 과학 교육과정 2023의 숙련 수준 Explain·Apply·Evaluate·Develop을 빌려 쓴다(원래 컴퓨팅 교육과정용이며 대인 기술 적용은 이 리포의 해석) | 「Introduction to Knowledge Model」: skill levels Explain, Apply, Evaluate, Develop | https://csed.acm.org/wp-content/uploads/2024/04/1.3-Introduction-to-Knowledge-Model.pdf | 2026-11-14 | 1차 공식 | — |
 | `Ryan·Deci 2000` | 자기결정이론: 자율성·유능감·관계 욕구 충족이 내재 동기를 키운다 | Ryan, R. M., & Deci, E. L. (2000). Self-determination theory and the facilitation of intrinsic motivation, social development, and well-being. *American Psychologist*, 55(1), 68–78. | https://doi.org/10.1037/0003-066X.55.1.68 | 2026-11-14 | 서지(DOI) | — |
 | `Hackman·Oldham 1976` | 직무 특성 모형(기술 다양성·과업 정체성·과업 중요성·자율성·피드백) | Hackman, J. R., & Oldham, G. R. (1976). Motivation through the design of work: test of a theory. *Organizational Behavior and Human Performance*, 16(2), 250–279. | https://doi.org/10.1016/0030-5073(76)90016-7 | 2026-11-14 | 서지(DOI) | — |
 | `Tversky·Kahneman 1974` | 대표성·가용성·기준점(앵커링) 휴리스틱과 체계적 편향 | Tversky, A., & Kahneman, D. (1974). Judgment under Uncertainty: Heuristics and Biases. *Science*, 185(4157), 1124–1131. | https://doi.org/10.1126/science.185.4157.1124 | 2026-11-14 | 서지(DOI) | — |
