@@ -35,6 +35,7 @@ function parseCurriculum(text) {
     for (const name of FIELDS) if (!fields[name]) problems.push(`${id}: 「${name}」 없음`);
     if (fields["목표"] && !LEVELS.some((l) => fields["목표"].startsWith(`${l} — `))) problems.push(`${id}: 목표 수준 형식 오류`);
     const prereq = !fields["선수"] || fields["선수"] === "없음" ? [] : fields["선수"].split(",").map((s) => s.trim());
+    if (fields["조건부 선수"]) for (const m of fields["조건부 선수"].matchAll(/([OLNX]\d+)\(/g)) prereq.push(m[1]);
     modules.set(id, prereq);
     for (const name of CITED) if (fields[name]) cites.push(...citeKeys(fields[name]).map((k) => [id, name, k]));
   }
